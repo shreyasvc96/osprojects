@@ -1,0 +1,111 @@
+Team Members
+----------------------------
+Aravind Rakam (U38314322)
+Shreyas Contractor (U80221841)
+
+
+Operating System and Setup
+---------------------------
+MacOS with M1 Processor (Both the Teammates)
+
+For installing xv6 we installed UTM and then install Ubuntu on it and in ubuntu we installed xv6.
+
+Initially we tried with Virtual Box but it did not work on MacOS with M1 chip. So after multiple failed attempts with Oracle's Virtual Box we went ahead with UTM. 
+
+In UTM we used the 22.04 and 23.10 version of Ubuntu from the library of images available. The GUI was really smooth in these 2 versions. But faced some issues with GCC so after try and error decided to downgrade and moved ahead with 14.04 Version.
+
+The GUI Interface in 14.04 was SUPER SLOW. After some days figured that Command Line interface works smoothly. so in the file /etc/default/grub commented some line and updated some and disabled GUI and CLI was smooth. (For Project 0 we have added GUI screen shots in Ubuntu)
+
+Now prefer using CLI as it is smooth compared to GUI. But if needed we enable GUI for some usage like File Sharing etc.
+
+
+
+Modifying ls
+----------------------------
+There is already ls file presnt in xv6, I have made the changes to the existing ones
+First I have declared a global variable called t and initialized it to zero to store the type whether it is file or directory
+
+I have declared a_bit variable to check whether -a option is given or not 
+
+I have a defined a function  hasAOption , it will check whether -a option is present or not , if present it will return 1 else 0
+
+getNext function is defined to get starting after commands are passed and -a option is checked to read next arguments
+
+I have modified existind ls method, I have added extra arhument to be taken to pass a_bit
+
+after ls method is called it will check type of file and  whether -a option is passed or not using a-bit  and t 
+
+if -a option is enable it will show hidden files and directories and by default for directories / is appended at the end by calculating buffer lenght and adding it at the end
+
+
+
+Implementing the sleep command
+------------------------------
+Started by the hints given in the question.
+
+To understand how to pass command line arguments reffered the exisiting code of echo.c file.
+
+First of all as instructed in the question, added a check to make sure that always command line arguments are passed in the code and if use user forgets to add command line arguments then a human friendly message " Please enter some command line arguments" is printed on the screen.
+
+Used the atoi() function to parse the time which was in String to Int to pass to the Sleep system call defined in sysproc.c file.
+
+The time passed to the sleep function is not in seconds its in system clock ticks, so to see a longer halt make sure to add values atleast like 500 or 1000.
+
+
+
+Implementing the uniq command
+-----------------------------
+I have declared global variables for c flag, u flag, w flag , width, and arg_counter
+
+In the main function  arguments are passed to argument checker method and if flags are passed its respective flags will be set 1 and file name is also read from the arguments , if pipeline is used to get input from the text file fileDescriptor is set to i.e fileopenstatus
+
+Unique method is called after reading arguments , in unique method file is opened using open method
+and content is read using read method and stored in buffer
+
+sentence Count is made using no of \n charcters in the file according to that sentences array is created
+
+and then the contenet is read from buffer and \n are replaced with null characters and sentences are stored
+
+The sentences are passed to getUniqueSentences menthod , it will compare and return array which has only unique sentences those are stored in uniqueArray
+
+and then basic functionlity is implemented using the conditions
+
+According to the flag set the condition is checked and ouput is given
+countRepetitions method will return count of sentences
+uniq_w is method is to process when width is mentioned 
+
+
+
+
+Implementing the find command
+-----------------------------
+Here also, Started by following the hints and started referring ls.c filw to understand how exactly ls command works.
+
+Created a file named sleep.c in this file I copied the content of ls.c file and updated the code.
+
+Basic Approach was: So ls will print all the contents of a folder for given path. I filtered out the output of ls command by checking the name against the name of file or folder we want and also by checking the st.type which is 1 for directory, 2 for files.
+
+in ls function Im passing a argument called flag. Flag basically specifies the operation we want to perform. 1 means we are searching for directory, 2 means we are searching for file, 4 means we are executing the printi command, 6 is for inum command when we dont pass + or - sign, 7 is inum command with + sign, 8 is inum command with - sign
+
+To pass the inode value I have declared global variables for the inum operations
+
+Main logic is in the ls function. I have added multiple if-else conditions based in the operations I want to execute. 
+
+I have added a if condition to avoid entering the folders whose names are "." or ".." becuase these folder take to existing folder and the previous folder which are redundant.
+
+If we encounter a folder(st.type==1) then we enter that folder in order to list all the occurences of files or folders with given name
+
+Once the required path or file is found we print them.
+
+For inum function reffered the following link (https://man7.org/linux/man-pages/man1/find.1.html)
+from here I got to know that when there is no sign we need file/folder with that exact inode number where in + we need file/folder whose inode number is greater than the given number and for - we need file/foler whose inode number is smaller than given number.
+
+fmtname function was the existing function in ls function which formats the filename from the given path which is getting used here.
+
+Have declared a concat function to concat strings to get the path of file/folder
+
+substring function is defined and used mainly for getting substring for inum function where the inode value is given in string with + or - sign in beginning. So took a substring ignoring the sign and pasred it to integer and assigned it to global variable which gets used later. 
+
+if no type flag is passed then function by default searches for file.
+
+So executed the basic find command, added the type flag with 'd' anf 'f' option. Implemented printi function and then all there variants of inum function with +, - and no sign.
